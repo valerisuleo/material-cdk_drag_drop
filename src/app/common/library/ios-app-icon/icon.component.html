@@ -1,0 +1,11 @@
+<div class="coez">
+    <div
+        class="app-container d-flex justify-content-center align-items-center"
+        [class.active]="props.isActive"
+    >
+        <fa-icon [icon]="props.brand"></fa-icon>
+    </div>
+    <p>
+        {{ props.brand.iconName | titlecase}}
+    </p>
+</div>
