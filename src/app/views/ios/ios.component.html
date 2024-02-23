@@ -2,30 +2,24 @@
     <div class="col-9 mx-auto">
         <div class="frame">
             <ng-container *ngIf="isIpadOn; else hidden">
-                <div class="layer p-4" (contextmenu)="handleRightClick($event)">
-                    <ul
-                        [hidden]="!isMenuOpen"
-                        [ngStyle]="{
-                            'top.px': dropdownPosition.y,
-                            'left.px': dropdownPosition.x
-                        }"
-                    >
-                        <li>
-                            <a (click)="createFolder()">New Folder</a>
-                        </li>
-                    </ul>
+                <div class="layer p-4">
+                    <!-- {{isFolder}} -->
+
                     <div cdkDropListGroup>
                         <div
                             cdkDropList
                             [cdkDropListData]="state.apps"
                             (cdkDropListDropped)="drop($event)"
-                            class="row mb-5"
                             cdkDropListOrientation="horizontal"
+                            class="row mb-5"
                         >
                             <div
                                 *ngFor="let app of state.apps"
+                                class="col-4 mb-5 cazzo"
                                 cdkDrag
-                                class="col-2 mb-5"
+                                (cdkDragStarted)="dragStart()"
+                                (cdkDragEnded)="dragEnd()"
+                                (mousemove)="handleMouseMove($event)"
                             >
                                 <ios-app [props]="app"></ios-app>
                             </div>
@@ -44,29 +38,20 @@
                                             'border-info': folder.isActive
                                         }"
                                     >
-                                        <div
-                                            class="card-header d-flex flex-column"
-                                        >
+                                        <div class="card-header d-flex flex-column">
                                             <div
                                                 class="d-flex justify-content-between align-items-start"
                                             >
                                                 <fa-icon
                                                     class="close"
                                                     [icon]="iconClose"
-                                                    (click)="
-                                                        handleClose(folder)
-                                                    "
+                                                    (click)="handleClose(folder)"
                                                 ></fa-icon>
                                                 <div
                                                     class="category-container d-flex justify-content-center align-items-center flex-grow-1"
                                                 >
                                                     <span>
-                                                        {{
-                                                            folder.genre ||
-                                                                folder.apps[0]
-                                                                    ?.genre
-                                                                | titlecase
-                                                        }}
+                                                        {{ folder.genre | titlecase }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -76,32 +61,21 @@
                                             <div
                                                 cdkDropList
                                                 [cdkDropListData]="folder.apps"
-                                                (cdkDropListDropped)="
-                                                    drop($event)
-                                                "
-                                                (cdkDropListEntered)="
-                                                    dragEntered($event, folder)
-                                                "
-                                                (cdkDropListExited)="
-                                                    dragExited($event, folder)
-                                                "
+                                                (cdkDropListDropped)="drop($event)"
+                                                (cdkDropListEntered)="dragEntered($event, folder)"
+                                                (cdkDropListExited)="dragExited($event, folder)"
                                                 cdkDropListOrientation="horizontal"
                                                 class="row"
                                                 [ngClass]="{
-                                                    'cdk-drop-list-empty':
-                                                        folder.apps.length === 0
+                                                    'cdk-drop-list-empty': folder.apps.length === 0
                                                 }"
                                             >
                                                 <div
                                                     class="col-6 pb-4"
-                                                    *ngFor="
-                                                        let app of folder.apps
-                                                    "
+                                                    *ngFor="let app of folder.apps"
                                                     cdkDrag
                                                 >
-                                                    <ios-app
-                                                        [props]="app"
-                                                    ></ios-app>
+                                                    <ios-app [props]="app"></ios-app>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,16 +86,10 @@
                                     cdkDropList
                                     [cdkDropListData]="folder.apps"
                                     (cdkDropListDropped)="drop($event)"
-                                    (cdkDropListEntered)="
-                                        dragEntered($event, folder)
-                                    "
-                                    (cdkDropListExited)="
-                                        dragExited($event, folder)
-                                    "
+                                    (cdkDropListEntered)="dragEntered($event, folder)"
+                                    (cdkDropListExited)="dragExited($event, folder)"
                                 >
-                                    <div
-                                        class="d-flex flex-column align-items-center"
-                                    >
+                                    <div class="d-flex flex-column align-items-center">
                                         <fa-icon
                                             *ngIf="!folder.isOpen"
                                             class="folder"
@@ -132,11 +100,7 @@
                                             }"
                                         ></fa-icon>
                                         <p *ngIf="!folder.isOpen">
-                                            {{
-                                                folder.genre ||
-                                                    folder.apps[0]?.genre
-                                                    | titlecase
-                                            }}
+                                            {{ folder.genre | titlecase }}
                                         </p>
                                     </div>
                                 </div>
@@ -149,8 +113,7 @@
             <ng-template #hidden>
                 <div class="boot">
                     <img src="../../assets/apple.png" alt="" />
-                    <div class="progress mt-5"                             style="height: 10px;"
-                    >
+                    <div class="progress mt-5" style="height: 10px">
                         <div
                             class="progress-bar progress-bar-striped progress-bar-animated"
                             role="progressbar"

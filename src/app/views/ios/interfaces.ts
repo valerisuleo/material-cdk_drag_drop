@@ -4,6 +4,7 @@ export interface IApp {
     isActive: boolean;
     genre: string;
     brand: IconDefinition;
+    id: number;
 }
 
 export interface IFolder {
